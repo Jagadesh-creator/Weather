@@ -3,157 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Enhanced Weather App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #00feba, #5b548a);
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+            flex-direction: column;
+        }
+        .card {
+            width: 350px;
+            background: #ffffffee;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px 35px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            margin-bottom: 30px;
+            overflow-y: auto;
+            max-height: 600px;
+            position: relative;
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+        .search {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .search input {
+            flex: 1;
+            padding: 15px 20px;
+            border-radius: 30px 0 0 30px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            background: #f0f0f0;
+        }
+        .search button {
+            width: 60px;
+            border-radius: 0 30px 30px 0;
+            border: none;
+            background: #00feba;
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .weather-icon {
+            width: 150px;
+            margin: 20px auto;
+            animation: float 3s ease-in-out infinite alternate;
+        }
+        @keyframes float {
+            from { transform: translateY(0px); }
+            to { transform: translateY(-20px); }
+        }
+        .temp {
+            font-size: 48px;
+            font-weight: 700;
+            color: #333;
+            margin: 10px 0;
+        }
+        .city {
+            font-size: 24px;
+            font-weight: 500;
+            color: #555;
+        }
+        .details {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+            color: #555;
+        }
+        .details div {
+            text-align: center;
+        }
+        .details img {
+            width: 40px;
+            margin-bottom: 5px;
+        }
+        .loading {
+            display: none;
+            font-size: 18px;
+            color: #888;
+        }
+        .city-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .city-list li {
+            background: #fff;
+            padding: 10px;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .city-list li:hover {
+            background: #00feba;
+            color: #fff;
+        }
+        .remove-btn {
+            background: #ff4d4d;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 5px;
+            border: none;
+        }
+        .remove-btn:hover {
+            background: #ff1a1a;
+        }
+    </style>
 </head>
-<style>
-    *{
-       margin:0;
-       padding:0;
-       font-family:'Poppins',sans-serif;
-       box-sizing:border-box;
-    }
-    body{
-        background: #222;
-    }
-    .card{
-        max-width: 470px;
-        width:90%;
-        background: linear-gradient(135deg,#00feba,#5b548a);
-        color:#fff;
-        margin:100px auto 0;
-        border-radius:20px;
-        padding:40px 35px;
-        text-align:center;
-    }
-    .search{
-        width:100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    .search input{
-        border:0;
-        outline:0;
-        background:#ebfffc;
-        color:#555;
-        padding:10px 25px;
-        height:60px;
-        border-radius:30px;
-        flex:1;
-        margin-right: 16px;
-        font-size:18px;
-    }
-    .search button{
-        border:0;
-        outline:0;
-        background: #ebfffc;
-        border-radius: 50%;
-        width:60px;
-        height:60px;
-        cursor:pointer;
-    }
-    .search button img{
-        width:16px;
-    }
-    #weather-icon{
-        width:170px;
-        margin-top:30px;
-    }
-    #weather h1{
-        font-size:45px;
-        font-weight: 500;
-    }
-    #weather h2{
-        font-size: 45px;
-        font-weight: 400;
-        margin-top: -10px;
-    }
-    .details{
-        display: flex;
-        align-items:center;
-        justify-content:space-between;
-        padding:0 20px;
-        margin-top:50px;
-    }
-    .col{
-        display:flex;
-        align-items: center;
-        text-align: center;
-    }
-    .col img{
-       width:40px;
-       margin-right:10px;
-    }
-    .humidity,.wind{
-        font-size: 28px;
-        margin-top:-6px ;
-    }
-
-</style>
 <body>
     <div class="card">
+        <!-- Weather Search Section -->
         <div class="search">
-        <input type="text" placeholder="Enter City Name." spellcheck="false">
-        <button class="btn"><img src="search.jpg"></button>
-    </div>
-    <div id="weather">
-        <img src="rain.png" width="200px" class="weather-icon">
-        <h1 class="temp">22°C</h1>
-        <h2 class="city">New York</h2>
+            <input type="text" placeholder="Enter City Name" spellcheck="false">
+            <button>Search</button>
+        </div>
+        <img src="assets/default.png" class="weather-icon" alt="Weather Icon">
+        <h1 class="temp">--°C</h1>
+        <h2 class="city">City</h2>
+        <p class="loading">Fetching weather data...</p>
         <div class="details">
-            <div class="col">
-                <img src="egimpo0c-removebg-preview.png" height="80px" bgcolor="linear-gradient(135deg,#00feba,#5b548a)">
-                <div>
-                    <p class="humidity">50%</p>
-                    <p>Humidity</p>
-                </div>
+            <div>
+                <img src="assets/humidity.png" alt="Humidity">
+                <p>Humidity</p>
+                <p class="humidity">--%</p>
             </div>
-            <div class="col">
-                <img src="Windy-512.webp" height="80px" >
-                <div>
-                    <p class="wind">15 km/h</p>
-                    <p>Wind Speed</p>
-                </div>
+            <div>
+                <img src="assets/wind.png" alt="Wind Speed">
+                <p>Wind Speed</p>
+                <p class="wind">-- km/h</p>
             </div>
         </div>
+
+        <!-- Saved Cities Section -->
+        <div class="city-list-container">
+            <h3>Saved Cities</h3>
+            <ul class="city-list"></ul>
+        </div>
     </div>
-    </div>
+
     <script>
-        const apiKey="721d99d091727d2db326e0c0e4954f47";
-        const apiurl="https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
-        const searchbox=document.querySelector(".search input");
-        const searchbtn=document.querySelector(".search button")
-        const weathericon=document.querySelector("weather-icon");
+        const apiKey = "721d99d091727d2db326e0c0e4954f47";
+        const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+        const searchInput = document.querySelector(".search input");
+        const searchButton = document.querySelector(".search button");
+        const weatherIcon = document.querySelector(".weather-icon");
+        const temp = document.querySelector(".temp");
+        const city = document.querySelector(".city");
+        const humidity = document.querySelector(".humidity");
+        const wind = document.querySelector(".wind");
+        const loading = document.querySelector(".loading");
+        const cityList = document.querySelector(".city-list");
 
-    async function checkweather(city){
-        const response=await fetch(apiurl+city+`&appid=${apiKey}`);
-        var data=await response.json();
-      
-    document.querySelector(".city").innerHTML=data.name;
-    document.querySelector(".temp").innerHTML=Math.round(data.main.temp)+"°C";
-    document.querySelector(".humidity").innerHTML=data.main.humidity+"%";
-    document.querySelector(".wind").innerHTML=data.wind.speed+" km/h";
-     if(data.weather[0].main=="Clouds"){
-       weathericon.src="rain.png";
-     }
-     else if(data.weather[0].main=="Clear"){
-        weathericon.src="sun.jpg";
-     }
-     else if(data.weather[0].main=="Rain"){
-        weathericon.src="rain.png";
-     }
-     else if(data.weather[0].main=="Drizzle"){
-        weathericon.src="th.jpg";
-     }
-   
-      
-    }
+        let savedCities = JSON.parse(localStorage.getItem("cities")) || [];
 
-    searchbtn.addEventListener('click',()=>{
-        checkweather(searchbox.value);
-    })
-   
+        // Function to display weather
+        async function getWeather(cityName) {
+            try {
+                loading.style.display = "block";
+                const response = await fetch(apiUrl + cityName + `&appid=${apiKey}`);
+                const data = await response.json();
+                loading.style.display = "none";
 
+                if (data.cod === "404") {
+                    alert("City not found. Please try again.");
+                    return;
+                }
+
+                weatherIcon.src = `assets/${data.weather[0].main.toLowerCase()}.png`;
+                temp.textContent = Math.round(data.main.temp) + "°C";
+                city.textContent = data.name;
+                humidity.textContent = data.main.humidity + "%";
+                wind.textContent = data.wind.speed + " km/h";
+
+                // Save city after successful search
+                saveCity(cityName);
+            } catch (error) {
+                alert("Failed to fetch weather data. Please try again later.");
+                console.error(error);
+            }
+        }
+
+        // Save city to localStorage
+        function saveCity(cityName) {
+            if (!savedCities.includes(cityName)) {
+                savedCities.push(cityName);
+                localStorage.setItem("cities", JSON.stringify(savedCities));
+                displayCities();
+            }
+        }
+
+        // Remove city from localStorage and list
+        function removeCity(cityName) {
+            savedCities = savedCities.filter(city => city !== cityName);
+            localStorage.setItem("cities", JSON.stringify(savedCities));
+            displayCities();
+        }
+
+        // Display saved cities in list
+        function displayCities() {
+            cityList.innerHTML = "";
+            savedCities.forEach(city => {
+                const li = document.createElement("li");
+                li.textContent = city;
+                const removeBtn = document.createElement("button");
+                removeBtn.textContent = "Remove";
+                removeBtn.classList.add("remove-btn");
+                removeBtn.addEventListener("click", () => removeCity(city));
+                li.appendChild(removeBtn);
+                cityList.appendChild(li);
+            });
+        }
+
+        // Handle search button click
+        searchButton.addEventListener("click", () => {
+            const cityName = searchInput.value.trim();
+            if (cityName !== "") {
+                getWeather(cityName);
+            }
+        });
+
+        // Initial call to display saved cities on page load
+        displayCities();
     </script>
 </body>
 </html>
